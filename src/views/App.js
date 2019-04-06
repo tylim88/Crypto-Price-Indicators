@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
-import { Table } from '../components'
-import request from 'superagent'
-// fetch('https://api.binance.com/api/v1/ping')
-// 	.then(res => res.json())
-// 	.then(console.log)
-request
-	.get('https://api.binance.com/api/v1/ping')
-	.then(res => console.log(res.body))
+import { EnhancedTable } from '../components'
 
 class App extends Component {
 	render() {
-		return <Table />
+		return <EnhancedTable />
 	}
 }
 

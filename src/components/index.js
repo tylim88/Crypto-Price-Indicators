@@ -1,3 +1,3 @@
-import Table from './Table/Table'
+import EnhancedTable from './Table/EnhancedTable'
 
-export { Table }
+export { EnhancedTable }
