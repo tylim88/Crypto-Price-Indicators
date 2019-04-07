@@ -10,19 +10,19 @@ import Tooltip from '@material-ui/core/Tooltip'
 const rows = [
 	{ id: 'symbol', numeric: false, disablePadding: true, label: 'Pair' },
 	{
-		id: 'lastPrice',
+		id: 'close',
 		numeric: true,
 		disablePadding: false,
 		label: 'Last Price',
 	},
 	{
-		id: 'priceChangePercent',
+		id: 'percentChange',
 		numeric: true,
 		disablePadding: false,
 		label: '24h Change',
 	},
-	{ id: 'highPrice', numeric: true, disablePadding: false, label: '24h High' },
-	{ id: 'lowPrice', numeric: true, disablePadding: false, label: '24h Low' },
+	{ id: 'high', numeric: true, disablePadding: false, label: '24h High' },
+	{ id: 'low', numeric: true, disablePadding: false, label: '24h Low' },
 	{ id: 'quoteVolume', numeric: true, disablePadding: false, label: 'Volume' },
 ]
 
@@ -43,7 +43,7 @@ class EnhancedTableHead extends React.Component {
 		return (
 			<TableHead>
 				<TableRow>
-					<TableCell padding="checkbox">
+					<TableCell padding='checkbox'>
 						<Checkbox
 							indeterminate={numSelected > 0 && numSelected < rowCount}
 							checked={numSelected === rowCount}
@@ -58,7 +58,7 @@ class EnhancedTableHead extends React.Component {
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}>
 								<Tooltip
-									title="Sort"
+									title='Sort'
 									placement={row.numeric ? 'bottom-end' : 'bottom-start'}
 									enterDelay={300}>
 									<TableSortLabel
