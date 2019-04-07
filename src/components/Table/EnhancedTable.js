@@ -8,8 +8,8 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
-import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EnhancedTableHead from './EnhancedTableHead'
+import io from 'socket.io-client'
 
 function stableSort(array, cmp) {
 	const stabilizedThis = array.map((el, index) => [el, index])
@@ -57,39 +57,29 @@ class EnhancedTable extends React.Component {
 		selected: [],
 		data: [],
 		page: 0,
-		rowsPerPage: 300,
+		rowsPerPage: 5,
 	}
 
 	componentDidMount() {
-		fetch('http://localhost:3000')
-			.then(res => res.json())
-			.then(res => {
-				const filtered = res.filter(coin => {
-					const index = coin.symbol.lastIndexOf('BTC')
-					return index !== 0 && index !== -1
-				})
-				const converted = filtered.map(coin => {
-					// coin.id = coin.symbol
-					// console.log(coin)
-					// very weird thing happen here, coin.id=Nan
-					for (let prop in coin) {
-						if (prop !== 'symbol') {
-							coin[prop] = parseFloat(coin[prop])
-						}
+		const socket = io.connect('http://localhost:3000')
+		socket.on('data', data => {
+			const coins = Object.entries(data.binance.btc_markets)
+			// very weird thing happen here, coin already converted to numeric
+			const converted = coins.map(coin => {
+				for (var prop in coin[1]) {
+					if (prop !== 'symbol') {
+						coin[1][prop] = parseFloat(coin[1][prop])
 					}
-					coin.id = coin.symbol
-					return coin
-				})
-				this.setState(
-					{
-						data: converted,
-					},
-					() => {
-						console.log(this.state)
-					}
-				)
+				}
+				coin[1].id = coin[1].symbol
+				coin = coin[1]
+				return coin
 			})
-			.catch(console.log)
+			this.setState({
+				data: converted,
+				rowsPerPage: converted.length,
+			})
+		})
 	}
 
 	handleRequestSort = (event, property) => {
@@ -108,7 +98,6 @@ class EnhancedTable extends React.Component {
 			this.setState(state => ({ selected: state.data.map(n => n.id) }))
 			return
 		}
-		console.log(this.state.data)
 		this.setState({ selected: [] })
 	}
 
@@ -151,9 +140,8 @@ class EnhancedTable extends React.Component {
 
 		return (
 			<Paper className={classes.root}>
-				<EnhancedTableToolbar numSelected={selected.length} />
 				<div className={classes.tableWrapper}>
-					<Table className={classes.table} aria-labelledby="tableTitle">
+					<Table className={classes.table} aria-labelledby='tableTitle'>
 						<EnhancedTableHead
 							numSelected={selected.length}
 							order={order}
@@ -171,30 +159,24 @@ class EnhancedTable extends React.Component {
 										<TableRow
 											hover
 											onClick={event => this.handleClick(event, n.id)}
-											role="checkbox"
+											role='checkbox'
 											aria-checked={isSelected}
 											tabIndex={-1}
 											key={n.id}
 											selected={isSelected}>
-											<TableCell padding="checkbox">
+											<TableCell padding='checkbox'>
 												<Checkbox checked={isSelected} />
 											</TableCell>
-											<TableCell component="th" scope="row" padding="none">
+											<TableCell component='th' scope='row' padding='none'>
 												{n.symbol}
 											</TableCell>
-											<TableCell align="right">
-												{n.lastPrice.toFixed(6)}
+											<TableCell align='right'>{n.close.toFixed(6)}</TableCell>
+											<TableCell align='right'>
+												{n.percentChange.toFixed(2) + '%'}
 											</TableCell>
-											<TableCell align="right">
-												{n.priceChangePercent.toFixed(2) + '%'}
-											</TableCell>
-											<TableCell align="right">
-												{n.highPrice.toFixed(6)}
-											</TableCell>
-											<TableCell align="right">
-												{n.lowPrice.toFixed(6)}
-											</TableCell>
-											<TableCell align="right">
+											<TableCell align='right'>{n.high.toFixed(6)}</TableCell>
+											<TableCell align='right'>{n.low.toFixed(6)}</TableCell>
+											<TableCell align='right'>
 												{n.quoteVolume.toFixed(6)}
 											</TableCell>
 										</TableRow>
@@ -209,8 +191,8 @@ class EnhancedTable extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					rowsPerPageOptions={[5, 10, 25, 50, 100, 300]}
-					component="div"
+					rowsPerPageOptions={[5, 10, 25, 50, 100, rowsPerPage]}
+					component='div'
 					count={data.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
