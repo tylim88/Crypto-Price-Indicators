@@ -1,3 +1,3 @@
 import EnhancedTable from './Table/EnhancedTable'
-
-export { EnhancedTable }
+import SimpleTabs from './Tab/SimpleTabs'
+export { SimpleTabs, EnhancedTable }

@@ -13,6 +13,8 @@ import Star from '@material-ui/icons/Star'
 import StarBorder from '@material-ui/icons/StarBorder'
 // import EnhancedTableToolbar from './EnhancedTableToolbar';
 import io from 'socket.io-client'
+import { Subscribe } from 'unstated'
+import { TableContainer, tableContainer } from '../../state'
 
 function stableSort(array, cmp) {
 	const stabilizedThis = array.map((el, index) => [el, index])
@@ -54,14 +56,14 @@ const styles = theme => ({
 })
 
 class EnhancedTable extends React.Component {
-	state = {
-		order: 'desc',
-		orderBy: 'quoteVolume',
-		selected: [],
-		data: [],
-		page: 0,
-		rowsPerPage: 5,
-	}
+	// state = {
+	// 	order: 'desc',
+	// 	orderBy: 'quoteVolume',
+	// 	selected: [],
+	// 	data: [],
+	// 	page: 0,
+	// 	rowsPerPage: 0,
+	// }
 
 	componentDidMount() {
 		const socket = io.connect('http://localhost:3000')
@@ -78,9 +80,10 @@ class EnhancedTable extends React.Component {
 				coin = coin[1]
 				return coin
 			})
-			this.setState({
-				data: converted,
-				rowsPerPage: converted.length,
+			tableContainer.updateState(state => {
+				state.data = converted
+				state.rowsPerPage = state.rowsPerPage || converted.length
+				return state
 			})
 		})
 	}
@@ -89,23 +92,26 @@ class EnhancedTable extends React.Component {
 		const orderBy = property
 		let order = 'desc'
 
-		if (this.state.orderBy === property && this.state.order === 'desc') {
+		if (
+			tableContainer.state.orderBy === property &&
+			tableContainer.state.order === 'desc'
+		) {
 			order = 'asc'
 		}
 
-		this.setState({ order, orderBy })
+		tableContainer.updateState({ order, orderBy })
 	}
 
 	// handleSelectAllClick = event => {
 	// 	if (event.target.checked) {
-	// 		this.setState(state => ({ selected: state.data.map(n => n.id) }))
+	// 		tableContainer.updateState(state => ({ selected: state.data.map(n => n.id) }))
 	// 		return
 	// 	}
-	// 	this.setState({ selected: [] })
+	// 	tableContainer.updateState({ selected: [] })
 	// }
 
 	handleClick = (event, id) => {
-		const { selected } = this.state
+		const { selected } = tableContainer.state
 		const selectedIndex = selected.indexOf(id)
 		let newSelected = []
 
@@ -122,106 +128,124 @@ class EnhancedTable extends React.Component {
 			)
 		}
 
-		this.setState({ selected: newSelected })
+		tableContainer.updateState({ selected: newSelected })
 	}
 
 	handleChangePage = (event, page) => {
-		this.setState({ page })
+		tableContainer.updateState({ page })
 	}
 
 	handleChangeRowsPerPage = event => {
-		this.setState({ rowsPerPage: event.target.value })
+		tableContainer.updateState({ rowsPerPage: event.target.value })
 	}
 
-	isSelected = id => this.state.selected.indexOf(id) !== -1
+	isSelected = id => tableContainer.state.selected.indexOf(id) !== -1
 
 	render() {
-		const { classes } = this.props
-		const {
-			data,
-			order,
-			orderBy,
-			// selected,
-			rowsPerPage,
-			page,
-		} = this.state
-		const emptyRows =
-			rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
-
 		return (
-			<Paper className={classes.root}>
-				{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-				<div className={classes.tableWrapper}>
-					<Table className={classes.table} aria-labelledby='tableTitle'>
-						<EnhancedTableHead
-							// numSelected={selected.length}
-							order={order}
-							orderBy={orderBy}
-							// onSelectAllClick={this.handleSelectAllClick}
-							onRequestSort={this.handleRequestSort}
-							// rowCount={data.length}
-						/>
-						<TableBody>
-							{stableSort(data, getSorting(order, orderBy))
-								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-								.map(n => {
-									const isSelected = this.isSelected(n.id)
-									return (
-										<TableRow
-											hover
-											// onClick={event => this.handleClick(event, n.id)}
-											role='checkbox'
-											aria-checked={isSelected}
-											tabIndex={-1}
-											key={n.id}
-											selected={isSelected}>
-											<TableCell padding='checkbox'>
-												<Checkbox
-													onClick={event => this.handleClick(event, n.id)}
-													checked={isSelected}
-													icon={<StarBorder />}
-													checkedIcon={<Star />}
-												/>
-											</TableCell>
-											<TableCell component='th' scope='row' padding='none'>
-												{n.symbol}
-											</TableCell>
-											<TableCell align='right'>{n.close.toFixed(6)}</TableCell>
-											<TableCell align='right'>
-												{n.percentChange.toFixed(2) + '%'}
-											</TableCell>
-											<TableCell align='right'>{n.high.toFixed(6)}</TableCell>
-											<TableCell align='right'>{n.low.toFixed(6)}</TableCell>
-											<TableCell align='right'>
-												{n.quoteVolume.toFixed(6)}
-											</TableCell>
-										</TableRow>
-									)
-								})}
-							{emptyRows > 0 && (
-								<TableRow style={{ height: 49 * emptyRows }}>
-									<TableCell colSpan={6} />
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</div>
-				<TablePagination
-					rowsPerPageOptions={[5, 10, 25, 50, 100, rowsPerPage]}
-					component='div'
-					count={data.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
-					onChangePage={this.handleChangePage}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>
-			</Paper>
+			<Subscribe to={[TableContainer]}>
+				{table => {
+					const { classes } = this.props
+					const {
+						data,
+						order,
+						orderBy,
+						// selected,
+						rowsPerPage,
+						page,
+					} = table.state
+					const emptyRows =
+						rowsPerPage -
+						Math.min(rowsPerPage, data.length - page * rowsPerPage)
+					return (
+						<Paper className={classes.root}>
+							{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+							<div className={classes.tableWrapper}>
+								<Table className={classes.table} aria-labelledby='tableTitle'>
+									<EnhancedTableHead
+										// numSelected={selected.length}
+										order={order}
+										orderBy={orderBy}
+										// onSelectAllClick={this.handleSelectAllClick}
+										onRequestSort={this.handleRequestSort}
+										// rowCount={data.length}
+									/>
+									<TableBody>
+										{stableSort(data, getSorting(order, orderBy))
+											.slice(
+												page * rowsPerPage,
+												page * rowsPerPage + rowsPerPage
+											)
+											.map(n => {
+												const isSelected = this.isSelected(n.id)
+												return (
+													<TableRow
+														hover
+														// onClick={event => this.handleClick(event, n.id)}
+														role='checkbox'
+														aria-checked={isSelected}
+														tabIndex={-1}
+														key={n.id}
+														selected={isSelected}>
+														<TableCell padding='checkbox'>
+															<Checkbox
+																onClick={event => this.handleClick(event, n.id)}
+																checked={isSelected}
+																icon={<StarBorder />}
+																checkedIcon={<Star />}
+															/>
+														</TableCell>
+														<TableCell
+															component='th'
+															scope='row'
+															padding='none'>
+															{n.symbol}
+														</TableCell>
+														<TableCell align='right'>
+															{n.close.toFixed(6)}
+														</TableCell>
+														<TableCell align='right'>
+															{n.percentChange.toFixed(2) + '%'}
+														</TableCell>
+														<TableCell align='right'>
+															{n.high.toFixed(6)}
+														</TableCell>
+														<TableCell align='right'>
+															{n.low.toFixed(6)}
+														</TableCell>
+														<TableCell align='right'>
+															{n.quoteVolume.toFixed(6)}
+														</TableCell>
+													</TableRow>
+												)
+											})}
+										{emptyRows > 0 && (
+											<TableRow style={{ height: 49 * emptyRows }}>
+												<TableCell colSpan={6} />
+											</TableRow>
+										)}
+									</TableBody>
+								</Table>
+							</div>
+							<TablePagination
+								rowsPerPageOptions={[5, 10, 25, 50, 100, rowsPerPage]}
+								component='div'
+								count={data.length}
+								rowsPerPage={rowsPerPage}
+								page={page}
+								backIconButtonProps={{
+									'aria-label': 'Previous Page',
+								}}
+								nextIconButtonProps={{
+									'aria-label': 'Next Page',
+								}}
+								onChangePage={this.handleChangePage}
+								onChangeRowsPerPage={this.handleChangeRowsPerPage}
+							/>
+						</Paper>
+					)
+				}}
+			</Subscribe>
 		)
 	}
 }

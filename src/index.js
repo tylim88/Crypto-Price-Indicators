@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom'
 import App from './views/App'
 import { BrowserRouter } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
+import { Provider } from 'unstated'
+import { tableContainer } from './state'
 
 ReactDOM.render(
-	<BrowserRouter>
-		<App />
-	</BrowserRouter>,
+	<Provider inject={[tableContainer]}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>,
 	document.getElementById('root')
 )
 
