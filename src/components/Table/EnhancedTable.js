@@ -108,7 +108,10 @@ class EnhancedTable extends React.Component {
 	}
 
 	handleChangePage = (event, page) => {
-		tableContainer.updateState({ page })
+		tableContainer.updateState(state => {
+			state.page.binance[this.props.markets] = page
+			return state
+		})
 	}
 
 	handleChangeRowsPerPage = event => {
@@ -137,7 +140,8 @@ class EnhancedTable extends React.Component {
 						rowsPerPage.binance[markets] -
 						Math.min(
 							rowsPerPage.binance[markets],
-							binance[markets].length - page * rowsPerPage.binance[markets]
+							binance[markets].length -
+								page.binance[markets] * rowsPerPage.binance[markets]
 						)
 					return (
 						<Paper className={classes.root}>
@@ -155,8 +159,8 @@ class EnhancedTable extends React.Component {
 									<TableBody>
 										{stableSort(binance[markets], getSorting(order, orderBy))
 											.slice(
-												page * rowsPerPage.binance[markets],
-												page * rowsPerPage.binance[markets] +
+												page.binance[markets] * rowsPerPage.binance[markets],
+												page.binance[markets] * rowsPerPage.binance[markets] +
 													rowsPerPage.binance[markets]
 											)
 											.map(n => {
@@ -222,7 +226,7 @@ class EnhancedTable extends React.Component {
 								component='div'
 								count={binance[markets].length}
 								rowsPerPage={rowsPerPage.binance[markets]}
-								page={page}
+								page={page.binance[markets]}
 								backIconButtonProps={{
 									'aria-label': 'Previous Page',
 								}}

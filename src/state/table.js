@@ -15,7 +15,15 @@ class TableContainer extends Container {
 				usd_markets: [],
 			},
 		},
-		page: 0,
+		page: {
+			binance: {
+				favorites: 0,
+				bnb_markets: 0,
+				btc_markets: 0,
+				eth_markets: 0,
+				usd_markets: 0,
+			},
+		},
 		rowsPerPage: {
 			binance: {
 				favorites: 0,
@@ -44,9 +52,9 @@ class TableContainer extends Container {
 					pair = pair[1]
 					return pair
 				})
-				this.state.rowsPerPage.binance[markets] = this.state.data.binance[
-					markets
-				].length
+				this.state.rowsPerPage.binance[markets] =
+					this.state.rowsPerPage.binance[markets] ||
+					this.state.data.binance[markets].length
 			}
 
 			this.setState({})
