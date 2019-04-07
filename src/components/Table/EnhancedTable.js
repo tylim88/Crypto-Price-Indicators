@@ -9,6 +9,9 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
 import EnhancedTableHead from './EnhancedTableHead'
+import Star from '@material-ui/icons/Star'
+import StarBorder from '@material-ui/icons/StarBorder'
+// import EnhancedTableToolbar from './EnhancedTableToolbar';
 import io from 'socket.io-client'
 
 function stableSort(array, cmp) {
@@ -93,13 +96,13 @@ class EnhancedTable extends React.Component {
 		this.setState({ order, orderBy })
 	}
 
-	handleSelectAllClick = event => {
-		if (event.target.checked) {
-			this.setState(state => ({ selected: state.data.map(n => n.id) }))
-			return
-		}
-		this.setState({ selected: [] })
-	}
+	// handleSelectAllClick = event => {
+	// 	if (event.target.checked) {
+	// 		this.setState(state => ({ selected: state.data.map(n => n.id) }))
+	// 		return
+	// 	}
+	// 	this.setState({ selected: [] })
+	// }
 
 	handleClick = (event, id) => {
 		const { selected } = this.state
@@ -134,21 +137,29 @@ class EnhancedTable extends React.Component {
 
 	render() {
 		const { classes } = this.props
-		const { data, order, orderBy, selected, rowsPerPage, page } = this.state
+		const {
+			data,
+			order,
+			orderBy,
+			// selected,
+			rowsPerPage,
+			page,
+		} = this.state
 		const emptyRows =
 			rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
 		return (
 			<Paper className={classes.root}>
+				{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
 				<div className={classes.tableWrapper}>
 					<Table className={classes.table} aria-labelledby='tableTitle'>
 						<EnhancedTableHead
-							numSelected={selected.length}
+							// numSelected={selected.length}
 							order={order}
 							orderBy={orderBy}
-							onSelectAllClick={this.handleSelectAllClick}
+							// onSelectAllClick={this.handleSelectAllClick}
 							onRequestSort={this.handleRequestSort}
-							rowCount={data.length}
+							// rowCount={data.length}
 						/>
 						<TableBody>
 							{stableSort(data, getSorting(order, orderBy))
@@ -158,14 +169,19 @@ class EnhancedTable extends React.Component {
 									return (
 										<TableRow
 											hover
-											onClick={event => this.handleClick(event, n.id)}
+											// onClick={event => this.handleClick(event, n.id)}
 											role='checkbox'
 											aria-checked={isSelected}
 											tabIndex={-1}
 											key={n.id}
 											selected={isSelected}>
 											<TableCell padding='checkbox'>
-												<Checkbox checked={isSelected} />
+												<Checkbox
+													onClick={event => this.handleClick(event, n.id)}
+													checked={isSelected}
+													icon={<StarBorder />}
+													checkedIcon={<Star />}
+												/>
 											</TableCell>
 											<TableCell component='th' scope='row' padding='none'>
 												{n.symbol}
