@@ -55,15 +55,32 @@ class SimpleTabs extends React.Component {
 						<Tab label='USDⓈ Markets' />
 					</Tabs>
 				</AppBar>
+
 				{value === 0 && (
 					<TabContainer>
-						<EnhancedTable />
+						<EnhancedTable markets={'favorites'} />
 					</TabContainer>
 				)}
-				{value === 1 && <TabContainer>Item Two</TabContainer>}
-				{value === 2 && <TabContainer>Item Three</TabContainer>}
-				{value === 3 && <TabContainer>Item Four</TabContainer>}
-				{value === 4 && <TabContainer>Item Five</TabContainer>}
+				{value === 1 && (
+					<TabContainer>
+						<EnhancedTable markets={'bnb_markets'} />
+					</TabContainer>
+				)}
+				{value === 2 && (
+					<TabContainer>
+						<EnhancedTable markets={'btc_markets'} />
+					</TabContainer>
+				)}
+				{value === 3 && (
+					<TabContainer>
+						<EnhancedTable markets={'eth_markets'} />
+					</TabContainer>
+				)}
+				{value === 4 && (
+					<TabContainer>
+						<EnhancedTable markets={'usd_markets'} />
+					</TabContainer>
+				)}
 			</div>
 		)
 	}

@@ -6,32 +6,50 @@ class TableContainer extends Container {
 		order: 'desc',
 		orderBy: 'quoteVolume',
 		selected: [],
-		data: [],
+		data: {
+			binance: {
+				favorites: [],
+				bnb_markets: [],
+				btc_markets: [],
+				eth_markets: [],
+				usd_markets: [],
+			},
+		},
 		page: 0,
-		rowsPerPage: 0,
+		rowsPerPage: {
+			binance: {
+				favorites: 0,
+				bnb_markets: 0,
+				btc_markets: 0,
+				eth_markets: 0,
+				usd_markets: 0,
+			},
+		},
 		socket: {},
 	}
 
 	startDataStream() {
 		this.state.socket = io.connect('http://localhost:3000')
 		this.state.socket.on('data', data => {
-			const coins = Object.entries(data.binance.btc_markets)
-			// very weird thing happen here, coin already converted to numeric
-			const converted = coins.map(coin => {
-				for (var prop in coin[1]) {
-					if (prop !== 'symbol') {
-						coin[1][prop] = parseFloat(coin[1][prop])
+			for (let markets in data.binance) {
+				const pairs = Object.entries(data.binance[markets])
+				// very weird thing happen here, pair already converted to numeric
+				this.state.data.binance[markets] = pairs.map(pair => {
+					for (let prop in pair[1]) {
+						if (prop !== 'symbol') {
+							pair[1][prop] = parseFloat(pair[1][prop])
+						}
 					}
-				}
-				coin[1].id = coin[1].symbol
-				coin = coin[1]
-				return coin
-			})
-			this.setState(state => {
-				state.data = converted
-				state.rowsPerPage = state.rowsPerPage || converted.length
-				return state
-			})
+					pair[1].id = pair[1].symbol
+					pair = pair[1]
+					return pair
+				})
+				this.state.rowsPerPage.binance[markets] = this.state.data.binance[
+					markets
+				].length
+			}
+
+			this.setState({})
 		})
 	}
 	updateState(obj) {

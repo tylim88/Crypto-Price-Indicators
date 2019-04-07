@@ -12,7 +12,6 @@ import EnhancedTableHead from './EnhancedTableHead'
 import Star from '@material-ui/icons/Star'
 import StarBorder from '@material-ui/icons/StarBorder'
 // import EnhancedTableToolbar from './EnhancedTableToolbar';
-import io from 'socket.io-client'
 import { Subscribe } from 'unstated'
 import { TableContainer, tableContainer } from '../../state'
 
@@ -65,29 +64,6 @@ class EnhancedTable extends React.Component {
 	// 	rowsPerPage: 0,
 	// }
 
-	componentDidMount() {
-		const socket = io.connect('http://localhost:3000')
-		socket.on('data', data => {
-			const coins = Object.entries(data.binance.btc_markets)
-			// very weird thing happen here, coin already converted to numeric
-			const converted = coins.map(coin => {
-				for (var prop in coin[1]) {
-					if (prop !== 'symbol') {
-						coin[1][prop] = parseFloat(coin[1][prop])
-					}
-				}
-				coin[1].id = coin[1].symbol
-				coin = coin[1]
-				return coin
-			})
-			tableContainer.updateState(state => {
-				state.data = converted
-				state.rowsPerPage = state.rowsPerPage || converted.length
-				return state
-			})
-		})
-	}
-
 	handleRequestSort = (event, property) => {
 		const orderBy = property
 		let order = 'desc'
@@ -136,7 +112,10 @@ class EnhancedTable extends React.Component {
 	}
 
 	handleChangeRowsPerPage = event => {
-		tableContainer.updateState({ rowsPerPage: event.target.value })
+		tableContainer.updateState(state => {
+			state.rowsPerPage.binance[this.props.markets] = event.target.value
+			return state
+		})
 	}
 
 	isSelected = id => tableContainer.state.selected.indexOf(id) !== -1
@@ -145,9 +124,9 @@ class EnhancedTable extends React.Component {
 		return (
 			<Subscribe to={[TableContainer]}>
 				{table => {
-					const { classes } = this.props
+					const { classes, markets } = this.props
 					const {
-						data,
+						data: { binance },
 						order,
 						orderBy,
 						// selected,
@@ -155,8 +134,11 @@ class EnhancedTable extends React.Component {
 						page,
 					} = table.state
 					const emptyRows =
-						rowsPerPage -
-						Math.min(rowsPerPage, data.length - page * rowsPerPage)
+						rowsPerPage.binance[markets] -
+						Math.min(
+							rowsPerPage.binance[markets],
+							binance[markets].length - page * rowsPerPage.binance[markets]
+						)
 					return (
 						<Paper className={classes.root}>
 							{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
@@ -171,10 +153,11 @@ class EnhancedTable extends React.Component {
 										// rowCount={data.length}
 									/>
 									<TableBody>
-										{stableSort(data, getSorting(order, orderBy))
+										{stableSort(binance[markets], getSorting(order, orderBy))
 											.slice(
-												page * rowsPerPage,
-												page * rowsPerPage + rowsPerPage
+												page * rowsPerPage.binance[markets],
+												page * rowsPerPage.binance[markets] +
+													rowsPerPage.binance[markets]
 											)
 											.map(n => {
 												const isSelected = this.isSelected(n.id)
@@ -228,10 +211,17 @@ class EnhancedTable extends React.Component {
 								</Table>
 							</div>
 							<TablePagination
-								rowsPerPageOptions={[5, 10, 25, 50, 100, rowsPerPage]}
+								rowsPerPageOptions={[
+									5,
+									10,
+									25,
+									50,
+									100,
+									binance[markets].length,
+								]}
 								component='div'
-								count={data.length}
-								rowsPerPage={rowsPerPage}
+								count={binance[markets].length}
+								rowsPerPage={rowsPerPage.binance[markets]}
 								page={page}
 								backIconButtonProps={{
 									'aria-label': 'Previous Page',
@@ -252,6 +242,7 @@ class EnhancedTable extends React.Component {
 
 EnhancedTable.propTypes = {
 	classes: PropTypes.object.isRequired,
+	markets: PropTypes.string.isRequired,
 }
 
 export default withStyles(styles)(EnhancedTable)
