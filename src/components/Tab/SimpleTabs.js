@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -11,7 +10,6 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import EnhancedTable from '../Table/EnhancedTable'
 import { tableContainer } from '../../state'
-import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 function TabContainer(props) {
 	return (
@@ -98,7 +96,7 @@ class SimpleTabs extends React.Component {
 				<AppBar position='static'>
 					<Toolbar>
 						<Tabs value={value} onChange={this.handleChange}>
-							<Tab label='✩ Favourite' />
+							<Tab label='✩ Favorite' />
 							<Tab label='BNB Markets' />
 							<Tab label='BTC Markets' />
 							<Tab label='ALTS Markets' />
