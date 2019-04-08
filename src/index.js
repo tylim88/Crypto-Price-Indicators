@@ -5,11 +5,21 @@ import { BrowserRouter } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'unstated'
 import { tableContainer } from './state'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+
+const theme = createMuiTheme({
+	palette: {
+		type: 'dark',
+	},
+	typography: { useNextVariants: true },
+})
 
 ReactDOM.render(
 	<Provider inject={[tableContainer]}>
 		<BrowserRouter>
-			<App />
+			<MuiThemeProvider theme={theme}>
+				<App />
+			</MuiThemeProvider>
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('root')
