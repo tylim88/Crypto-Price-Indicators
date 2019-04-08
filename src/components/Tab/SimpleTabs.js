@@ -109,10 +109,10 @@ class SimpleTabs extends React.Component {
 							</div>
 							<InputBase
 								onChange={event => {
-									const value = event.target.value
+									const value = event.target.value.toUpperCase()
 									setTimeout(() => {
-										tableContainer.setState({ search: value })
-									}, 0)
+										tableContainer.updateSearch(value)
+									})
 								}}
 								placeholder='Search…'
 								classes={{
