@@ -44,7 +44,8 @@ function getSorting(order, orderBy) {
 const styles = theme => ({
 	root: {
 		width: '100%',
-		marginTop: theme.spacing.unit * 3,
+		// marginTop: theme.spacing.unit * 3,
+		marginTop: 0,
 	},
 	table: {
 		minWidth: 1020,
@@ -75,15 +76,15 @@ class EnhancedTable extends React.Component {
 			order = 'asc'
 		}
 
-		tableContainer.updateState({ order, orderBy })
+		tableContainer.setState({ order, orderBy })
 	}
 
 	// handleSelectAllClick = event => {
 	// 	if (event.target.checked) {
-	// 		tableContainer.updateState(state => ({ selected: state.data.map(n => n.id) }))
+	// 		tableContainer.setState(state => ({ selected: state.data.map(n => n.id) }))
 	// 		return
 	// 	}
-	// 	tableContainer.updateState({ selected: [] })
+	// 	tableContainer.setState({ selected: [] })
 	// }
 
 	handleClick = (event, id) => {
@@ -104,18 +105,18 @@ class EnhancedTable extends React.Component {
 			)
 		}
 
-		tableContainer.updateState({ selected: newSelected })
+		tableContainer.setState({ selected: newSelected })
 	}
 
 	handleChangePage = (event, page) => {
-		tableContainer.updateState(state => {
+		tableContainer.setState(state => {
 			state.page.binance[this.props.markets] = page
 			return state
 		})
 	}
 
 	handleChangeRowsPerPage = event => {
-		tableContainer.updateState(state => {
+		tableContainer.setState(state => {
 			state.rowsPerPage.binance[this.props.markets] = event.target.value
 			return state
 		})

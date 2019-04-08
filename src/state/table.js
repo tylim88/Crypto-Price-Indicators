@@ -34,10 +34,11 @@ class TableContainer extends Container {
 			},
 		},
 		socket: {},
+		search: '',
 	}
 
 	startDataStream() {
-		this.state.socket = io.connect('http://localhost:3000')
+		this.state.socket = io.connect('http://localhost:3001')
 		this.state.socket.on('data', data => {
 			for (let markets in data.binance) {
 				const pairs = Object.entries(data.binance[markets])
@@ -59,9 +60,6 @@ class TableContainer extends Container {
 
 			this.setState({})
 		})
-	}
-	updateState(obj) {
-		this.setState(obj)
 	}
 }
 
