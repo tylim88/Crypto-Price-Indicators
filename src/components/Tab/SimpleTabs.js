@@ -108,6 +108,12 @@ class SimpleTabs extends React.Component {
 								<SearchIcon />
 							</div>
 							<InputBase
+								onChange={event => {
+									const value = event.target.value
+									setTimeout(() => {
+										tableContainer.setState({ search: value })
+									}, 0)
+								}}
 								placeholder='Search…'
 								classes={{
 									root: classes.inputRoot,
