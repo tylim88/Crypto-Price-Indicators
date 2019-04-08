@@ -1,11 +1,20 @@
 import { Container } from 'unstated'
 import io from 'socket.io-client'
+import localForage from 'localforage'
 
 class TableContainer extends Container {
 	state = {
 		order: 'desc',
 		orderBy: 'quoteVolume',
-		selected: [],
+		// selected:[],
+		favorite: {
+			binance: {
+				bnb_markets: [],
+				btc_markets: [],
+				eth_markets: [],
+				usd_markets: [],
+			},
+		},
 		data: {
 			binance: {
 				favorites: [],
@@ -45,8 +54,14 @@ class TableContainer extends Container {
 		socket: {},
 	}
 
+	readIndexDb = () => {
+		localForage.getItem('favorite').then(res => {
+			this.state.favorite = JSON.parse(res)
+		})
+	}
+
 	startDataStream = () => {
-		this.state.socket = io.connect('http://localhost:3001')
+		this.state.socket = io.connect(process.env.REACT_APP_SERVER_URL)
 		this.state.socket.on('data', data => {
 			for (let markets in data.binance) {
 				const pairs = Object.entries(data.binance[markets])

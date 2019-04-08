@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import EnhancedTable from '../Table/EnhancedTable'
 import { tableContainer } from '../../state'
 import SearchIcon from '@material-ui/icons/Search'
+
 function TabContainer(props) {
 	return (
 		<Typography component='div' style={{ padding: 8 * 3 }}>
@@ -77,6 +78,7 @@ const styles = theme => ({
 class SimpleTabs extends React.Component {
 	constructor(props) {
 		super(props)
+		tableContainer.readIndexDb()
 		tableContainer.startDataStream()
 	}
 	state = {

@@ -14,6 +14,7 @@ import StarBorder from '@material-ui/icons/StarBorder'
 // import EnhancedTableToolbar from './EnhancedTableToolbar';
 import { Subscribe } from 'unstated'
 import { TableContainer, tableContainer } from '../../state'
+import localForage from 'localforage'
 
 function stableSort(array, cmp) {
 	const stabilizedThis = array.map((el, index) => [el, index])
@@ -88,24 +89,39 @@ class EnhancedTable extends React.Component {
 	// }
 
 	handleClick = (event, id) => {
-		const { selected } = tableContainer.state
-		const selectedIndex = selected.indexOf(id)
-		let newSelected = []
+		// const { selected } = tableContainer.state
+		// const selectedIndex = selected.indexOf(id)
+		// let newSelected = []
 
-		if (selectedIndex === -1) {
-			newSelected = newSelected.concat(selected, id)
-		} else if (selectedIndex === 0) {
-			newSelected = newSelected.concat(selected.slice(1))
-		} else if (selectedIndex === selected.length - 1) {
-			newSelected = newSelected.concat(selected.slice(0, -1))
-		} else if (selectedIndex > 0) {
-			newSelected = newSelected.concat(
-				selected.slice(0, selectedIndex),
-				selected.slice(selectedIndex + 1)
-			)
+		// if (selectedIndex === -1) {
+		// 	newSelected = newSelected.concat(selected, id)
+		// } else if (selectedIndex === 0) {
+		// 	newSelected = newSelected.concat(selected.slice(1))
+		// } else if (selectedIndex === selected.length - 1) {
+		// 	newSelected = newSelected.concat(selected.slice(0, -1))
+		// } else if (selectedIndex > 0) {
+		// 	newSelected = newSelected.concat(
+		// 		selected.slice(0, selectedIndex),
+		// 		selected.slice(selectedIndex + 1)
+		// 	)
+		// }
+
+		// tableContainer.setState({ selected: newSelected })
+		const favorite = tableContainer.state.favorite.binance
+		const markets = this.props.markets
+		if (event.target.checked) {
+			favorite[markets].push(id)
+		} else {
+			for (var i = 0; i < favorite[markets].length; i++) {
+				if (favorite[markets][i] === id) {
+					favorite[markets].splice(i, 1)
+				}
+			}
 		}
-
-		tableContainer.setState({ selected: newSelected })
+		localForage.setItem(
+			'favorite',
+			JSON.stringify(tableContainer.state.favorite)
+		)
 	}
 
 	handleChangePage = (event, page) => {
@@ -122,7 +138,7 @@ class EnhancedTable extends React.Component {
 		})
 	}
 
-	isSelected = id => tableContainer.state.selected.indexOf(id) !== -1
+	// isSelected = id => tableContainer.state.selected.indexOf(id) !== -1
 
 	render() {
 		return (
@@ -171,20 +187,23 @@ class EnhancedTable extends React.Component {
 													rowsPerPageBinance[markets]
 											)
 											.map(n => {
-												const isSelected = this.isSelected(n.id)
+												{
+													/* const isSelected = this.isSelected(n.id) */
+												}
 												return (
 													<TableRow
 														hover
 														// onClick={event => this.handleClick(event, n.id)}
 														role='checkbox'
-														aria-checked={isSelected}
+														// aria-checked={isSelected}
 														tabIndex={-1}
 														key={n.id}
-														selected={isSelected}>
+														// selected={isSelected}
+													>
 														<TableCell padding='checkbox'>
 															<Checkbox
 																onClick={event => this.handleClick(event, n.id)}
-																checked={isSelected}
+																// checked={isSelected}
 																icon={<StarBorder />}
 																checkedIcon={<Star />}
 															/>
