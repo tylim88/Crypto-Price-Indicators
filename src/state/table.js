@@ -17,38 +17,38 @@ class TableContainer extends Container {
 		},
 		data: {
 			binance: {
-				favorites: [],
 				bnb_markets: [],
 				btc_markets: [],
 				eth_markets: [],
 				usd_markets: [],
+				favorites: [],
 			},
 		},
 		filteredData: {
 			binance: {
-				favorites: [],
 				bnb_markets: [],
 				btc_markets: [],
 				eth_markets: [],
 				usd_markets: [],
+				favorites: [],
 			},
 		},
 		page: {
 			binance: {
-				favorites: 0,
 				bnb_markets: 0,
 				btc_markets: 0,
 				eth_markets: 0,
 				usd_markets: 0,
+				favorites: 0,
 			},
 		},
 		rowsPerPage: {
 			binance: {
-				favorites: 0,
-				bnb_markets: 0,
-				btc_markets: 0,
-				eth_markets: 0,
-				usd_markets: 0,
+				bnb_markets: 'Max',
+				btc_markets: 'Max',
+				eth_markets: 'Max',
+				usd_markets: 'Max',
+				favorites: 'Max',
 			},
 		},
 		socket: {},
@@ -63,25 +63,34 @@ class TableContainer extends Container {
 	startDataStream = () => {
 		this.state.socket = io.connect(process.env.REACT_APP_SERVER_URL)
 		this.state.socket.on('data', data => {
+			this.state.data.binance.favorites = []
 			for (let markets in data.binance) {
-				const pairs = Object.entries(data.binance[markets])
-				// very weird thing happen here, pair already converted to numeric
-				this.state.data.binance[markets] = pairs.map(pair => {
-					for (let prop in pair[1]) {
-						if (prop !== 'symbol') {
-							pair[1][prop] = parseFloat(pair[1][prop])
+				if (markets !== 'favorites') {
+					const pairs = Object.entries(data.binance[markets])
+					// very weird thing happen here, pair already converted to numeric
+					this.state.data.binance[markets] = pairs.map(pair => {
+						for (let prop in pair[1]) {
+							if (prop !== 'symbol') {
+								pair[1][prop] = parseFloat(pair[1][prop])
+							}
 						}
-					}
-					pair[1].id = pair[1].symbol
-					pair = pair[1]
-					return pair
-				})
-				this.state.rowsPerPage.binance[markets] =
-					this.state.rowsPerPage.binance[markets] ||
-					this.state.data.binance[markets].length
-			}
+						pair = pair[1]
+						pair.id = pair.symbol
 
-			this.setState({})
+						if (
+							this.state.favorite.binance[markets].indexOf(pair['symbol']) !==
+							-1
+						) {
+							pair.favorite = true
+							this.state.data.binance.favorites.push(pair)
+						} else {
+							pair.favorite = false
+						}
+						return pair
+					})
+				}
+			}
+			this.setState({}) // wont render without argument
 		})
 	}
 	updateSearch = value => {

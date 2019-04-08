@@ -88,7 +88,7 @@ class EnhancedTable extends React.Component {
 	// 	tableContainer.setState({ selected: [] })
 	// }
 
-	handleClick = (event, id) => {
+	handleClick = (event, n) => {
 		// const { selected } = tableContainer.state
 		// const selectedIndex = selected.indexOf(id)
 		// let newSelected = []
@@ -107,17 +107,27 @@ class EnhancedTable extends React.Component {
 		// }
 
 		// tableContainer.setState({ selected: newSelected })
+		n.favorite = !n.favorite
 		const favorite = tableContainer.state.favorite.binance
+		const favorites = tableContainer.state.data.binance.favorites
 		const markets = this.props.markets
 		if (event.target.checked) {
-			favorite[markets].push(id)
+			favorite[markets].push(n.id)
+			favorites.push(n)
 		} else {
-			for (var i = 0; i < favorite[markets].length; i++) {
-				if (favorite[markets][i] === id) {
-					favorite[markets].splice(i, 1)
+			favorite[markets].forEach((element, i, arr) => {
+				if (element === n.id) {
+					arr.splice(i, 1)
 				}
-			}
+			})
+
+			favorites.forEach((element, i, arr) => {
+				if (element.symbol === n.id) {
+					arr.splice(i, 1)
+				}
+			})
 		}
+		tableContainer.setState({})
 		localForage.setItem(
 			'favorite',
 			JSON.stringify(tableContainer.state.favorite)
@@ -150,13 +160,16 @@ class EnhancedTable extends React.Component {
 						order,
 						orderBy,
 						// selected,
-						rowsPerPage: { binance: rowsPerPageBinance },
-						page,
+						rowsPerPage,
+						page: { binance: pageBinance },
 						filteredData: { binance: filteredBinance },
 					} = table.state
 					const list =
 						(filteredBinance[markets].length && filteredBinance[markets]) ||
 						binance[markets]
+					const rowsPerPageBinance =
+						(rowsPerPage.binance[markets] === 'Max' && list.length) ||
+						rowsPerPage.binance[markets]
 					{
 						/* const emptyRows =
 						rowsPerPageBinance[markets] -
@@ -182,9 +195,9 @@ class EnhancedTable extends React.Component {
 									<TableBody>
 										{stableSort(list, getSorting(order, orderBy))
 											.slice(
-												page.binance[markets] * rowsPerPageBinance[markets],
-												page.binance[markets] * rowsPerPageBinance[markets] +
-													rowsPerPageBinance[markets]
+												pageBinance[markets] * rowsPerPageBinance,
+												pageBinance[markets] * rowsPerPageBinance +
+													rowsPerPageBinance
 											)
 											.map(n => {
 												{
@@ -202,8 +215,10 @@ class EnhancedTable extends React.Component {
 													>
 														<TableCell padding='checkbox'>
 															<Checkbox
-																onClick={event => this.handleClick(event, n.id)}
-																// checked={isSelected}
+																onClick={event => {
+																	this.handleClick(event, n)
+																}}
+																checked={n.favorite}
 																icon={<StarBorder />}
 																checkedIcon={<Star />}
 															/>
@@ -241,11 +256,11 @@ class EnhancedTable extends React.Component {
 								</Table>
 							</div>
 							<TablePagination
-								rowsPerPageOptions={[5, 10, 25, 50, 100, list.length]}
+								rowsPerPageOptions={[5, 10, 25, 50, 100, 'Max']}
 								component='div'
 								count={list.length}
-								rowsPerPage={rowsPerPageBinance[markets]}
-								page={page.binance[markets]}
+								rowsPerPage={rowsPerPageBinance}
+								page={pageBinance[markets]}
 								backIconButtonProps={{
 									'aria-label': 'Previous Page',
 								}}
