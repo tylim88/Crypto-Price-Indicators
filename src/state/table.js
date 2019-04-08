@@ -15,6 +15,15 @@ class TableContainer extends Container {
 				usd_markets: [],
 			},
 		},
+		filteredData: {
+			binance: {
+				favorites: [],
+				bnb_markets: [],
+				btc_markets: [],
+				eth_markets: [],
+				usd_markets: [],
+			},
+		},
 		page: {
 			binance: {
 				favorites: 0,
@@ -34,10 +43,9 @@ class TableContainer extends Container {
 			},
 		},
 		socket: {},
-		search: '',
 	}
 
-	startDataStream() {
+	startDataStream = () => {
 		this.state.socket = io.connect('http://localhost:3001')
 		this.state.socket.on('data', data => {
 			for (let markets in data.binance) {
@@ -60,6 +68,19 @@ class TableContainer extends Container {
 
 			this.setState({})
 		})
+	}
+	updateSearch = value => {
+		for (let markets in this.state.data.binance) {
+			this.state.filteredData.binance[markets] = this.state.data.binance[
+				markets
+			].filter(coin => {
+				return coin.symbol.includes(value)
+			})
+			this.state.rowsPerPage.binance[markets] = this.state.filteredData.binance[
+				markets
+			].length
+		}
+		this.setState({})
 	}
 }
 

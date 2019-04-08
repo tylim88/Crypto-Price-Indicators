@@ -134,16 +134,22 @@ class EnhancedTable extends React.Component {
 						order,
 						orderBy,
 						// selected,
-						rowsPerPage,
+						rowsPerPage: { binance: rowsPerPageBinance },
 						page,
+						filteredData: { binance: filteredBinance },
 					} = table.state
-					const emptyRows =
-						rowsPerPage.binance[markets] -
+					const list =
+						(filteredBinance[markets].length && filteredBinance[markets]) ||
+						binance[markets]
+					{
+						/* const emptyRows =
+						rowsPerPageBinance[markets] -
 						Math.min(
-							rowsPerPage.binance[markets],
-							binance[markets].length -
-								page.binance[markets] * rowsPerPage.binance[markets]
-						)
+							rowsPerPageBinance[markets],
+							list.length -
+								page.list * rowsPerPageBinance[markets]
+						) */
+					}
 					return (
 						<Paper className={classes.root}>
 							{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
@@ -158,11 +164,11 @@ class EnhancedTable extends React.Component {
 										// rowCount={data.length}
 									/>
 									<TableBody>
-										{stableSort(binance[markets], getSorting(order, orderBy))
+										{stableSort(list, getSorting(order, orderBy))
 											.slice(
-												page.binance[markets] * rowsPerPage.binance[markets],
-												page.binance[markets] * rowsPerPage.binance[markets] +
-													rowsPerPage.binance[markets]
+												page.binance[markets] * rowsPerPageBinance[markets],
+												page.binance[markets] * rowsPerPageBinance[markets] +
+													rowsPerPageBinance[markets]
 											)
 											.map(n => {
 												const isSelected = this.isSelected(n.id)
@@ -207,26 +213,19 @@ class EnhancedTable extends React.Component {
 													</TableRow>
 												)
 											})}
-										{emptyRows > 0 && (
+										{/*emptyRows > 0 && (
 											<TableRow style={{ height: 49 * emptyRows }}>
 												<TableCell colSpan={6} />
 											</TableRow>
-										)}
+										)*/}
 									</TableBody>
 								</Table>
 							</div>
 							<TablePagination
-								rowsPerPageOptions={[
-									5,
-									10,
-									25,
-									50,
-									100,
-									binance[markets].length,
-								]}
+								rowsPerPageOptions={[5, 10, 25, 50, 100, list.length]}
 								component='div'
-								count={binance[markets].length}
-								rowsPerPage={rowsPerPage.binance[markets]}
+								count={list.length}
+								rowsPerPage={rowsPerPageBinance[markets]}
 								page={page.binance[markets]}
 								backIconButtonProps={{
 									'aria-label': 'Previous Page',
