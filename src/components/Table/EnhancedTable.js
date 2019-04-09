@@ -27,10 +27,17 @@ function stableSort(array, cmp) {
 }
 
 function desc(a, b, orderBy) {
-	if (b[orderBy] < a[orderBy]) {
+	let orderByA = a[orderBy]
+	let orderByB = b[orderBy]
+
+	if (typeof orderByA === 'string') {
+		orderByA = orderByA.toUpperCase()
+		orderByB = orderByB.toUpperCase()
+	}
+	if (orderByB < orderByA) {
 		return -1
 	}
-	if (b[orderBy] > a[orderBy]) {
+	if (orderByB > orderByA) {
 		return 1
 	}
 	return 0
