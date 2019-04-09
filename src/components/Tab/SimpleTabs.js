@@ -82,7 +82,7 @@ class SimpleTabs extends React.Component {
 		tableContainer.startDataStream()
 	}
 	state = {
-		value: 0,
+		value: 2,
 	}
 
 	handleChange = (event, value) => {
