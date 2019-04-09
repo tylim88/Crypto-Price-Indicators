@@ -229,6 +229,7 @@ class EnhancedTable extends React.Component {
 															padding='none'>
 															{n.symbol}
 														</TableCell>
+														<TableCell align='right'>{n.name}</TableCell>
 														<TableCell align='right'>
 															{n.close.toFixed(6)}
 														</TableCell>

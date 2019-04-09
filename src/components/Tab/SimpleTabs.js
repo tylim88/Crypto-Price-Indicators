@@ -143,7 +143,7 @@ class SimpleTabs extends React.Component {
 				)}
 				{value === 3 && (
 					<TabContainer>
-						<EnhancedTable markets={'eth_markets'} />
+						<EnhancedTable markets={'alts_markets'} />
 					</TabContainer>
 				)}
 				{value === 4 && (

@@ -1,6 +1,7 @@
 import { Container } from 'unstated'
 import io from 'socket.io-client'
 import localForage from 'localforage'
+const { nameM } = require('crypto-symbol')
 
 class TableContainer extends Container {
 	state = {
@@ -11,7 +12,7 @@ class TableContainer extends Container {
 			binance: {
 				bnb_markets: [],
 				btc_markets: [],
-				eth_markets: [],
+				alts_markets: [],
 				usd_markets: [],
 			},
 		},
@@ -19,7 +20,7 @@ class TableContainer extends Container {
 			binance: {
 				bnb_markets: [],
 				btc_markets: [],
-				eth_markets: [],
+				alts_markets: [],
 				usd_markets: [],
 				favorites: [],
 			},
@@ -28,7 +29,7 @@ class TableContainer extends Container {
 			binance: {
 				bnb_markets: [],
 				btc_markets: [],
-				eth_markets: [],
+				alts_markets: [],
 				usd_markets: [],
 				favorites: [],
 			},
@@ -37,7 +38,7 @@ class TableContainer extends Container {
 			binance: {
 				bnb_markets: 0,
 				btc_markets: 0,
-				eth_markets: 0,
+				alts_markets: 0,
 				usd_markets: 0,
 				favorites: 0,
 			},
@@ -46,7 +47,7 @@ class TableContainer extends Container {
 			binance: {
 				bnb_markets: 'Max',
 				btc_markets: 'Max',
-				eth_markets: 'Max',
+				alts_markets: 'Max',
 				usd_markets: 'Max',
 				favorites: 'Max',
 			},
@@ -56,7 +57,7 @@ class TableContainer extends Container {
 
 	readIndexDb = () => {
 		localForage.getItem('favorite').then(res => {
-			this.state.favorite = JSON.parse(res)
+			res && (this.state.favorite = JSON.parse(res))
 		})
 	}
 
@@ -76,6 +77,7 @@ class TableContainer extends Container {
 						}
 						pair = pair[1]
 						pair.id = pair.symbol
+						pair.name = nameM(pair.symbol.split('/')[0])
 
 						if (
 							this.state.favorite.binance[markets].indexOf(pair['symbol']) !==

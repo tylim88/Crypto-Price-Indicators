@@ -9,6 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 const rows = [
 	{ id: 'symbol', numeric: false, disablePadding: true, label: 'Pair' },
+	{ id: 'name', numeric: true, disablePadding: false, label: 'name' },
 	{
 		id: 'close',
 		numeric: true,
