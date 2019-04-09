@@ -24,8 +24,10 @@
 		"pretty-quick": "^1.10.0"
 	},
 	"scripts": {
-		"start": "cross-env PORT=3006 env-cmd ./.config/dev.env react-scripts start",
-		"build": "react-scripts build",
+		"start": "cross-env PORT=3006 env-cmd ./.config/prod.env react-scripts start",
+		"dev": "cross-env PORT=3006 env-cmd ./.config/dev.env react-scripts start",
+		"build": "env-cmd ./.config/prod.env react-scripts build",
+		"duild": "env-cmd ./.config/dev.env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
