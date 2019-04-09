@@ -238,19 +238,19 @@ class EnhancedTable extends React.Component {
 														</TableCell>
 														<TableCell align='right'>{n.name}</TableCell>
 														<TableCell align='right'>
-															{n.close.toFixed(6)}
+															{n.close.toFixed(8)}
 														</TableCell>
 														<TableCell align='right'>
 															{n.percentChange.toFixed(2) + '%'}
 														</TableCell>
 														<TableCell align='right'>
-															{n.high.toFixed(6)}
+															{n.high.toFixed(8)}
 														</TableCell>
 														<TableCell align='right'>
-															{n.low.toFixed(6)}
+															{n.low.toFixed(8)}
 														</TableCell>
 														<TableCell align='right'>
-															{n.quoteVolume.toFixed(6)}
+															{n.quoteVolume.toFixed(8)}
 														</TableCell>
 													</TableRow>
 												)
