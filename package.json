@@ -5,7 +5,7 @@
 	"dependencies": {
 		"@material-ui/core": "^3.9.3",
 		"@material-ui/icons": "^3.0.2",
-		"crypto-symbol": "0.0.4",
+		"crypto-symbol": "^0.1.2",
 		"localforage": "^1.7.3",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
@@ -15,7 +15,6 @@
 		"unstated": "^2.1.1"
 	},
 	"devDependencies": {
-		"cross-env": "^5.2.0",
 		"env-cmd": "^8.0.2",
 		"eslint-config-prettier": "^4.1.0",
 		"eslint-plugin-prettier": "^3.0.1",
@@ -24,8 +23,8 @@
 		"pretty-quick": "^1.10.0"
 	},
 	"scripts": {
-		"start": "cross-env PORT=3006 env-cmd ./.config/prod.env react-scripts start",
-		"dev": "cross-env PORT=3006 env-cmd ./.config/dev.env react-scripts start",
+		"start": "env-cmd ./.config/prod.env react-scripts start",
+		"dev": "env-cmd ./.config/dev.env react-scripts start",
 		"build": "env-cmd ./.config/prod.env react-scripts build",
 		"duild": "env-cmd ./.config/dev.env react-scripts build",
 		"test": "react-scripts test",
