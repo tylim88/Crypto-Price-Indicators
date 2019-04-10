@@ -117,7 +117,6 @@ class EnhancedTable extends React.Component {
 		n.favorite = !n.favorite
 		const favorite = tableContainer.state.favorite.binance
 		const favorites = tableContainer.state.data.binance.favorites
-		const markets = this.props.markets
 		if (event.target.checked) {
 			favorite.push(n.id)
 			favorites.push(n)
