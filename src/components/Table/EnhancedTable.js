@@ -11,7 +11,6 @@ import Checkbox from '@material-ui/core/Checkbox'
 import EnhancedTableHead from './EnhancedTableHead'
 import Star from '@material-ui/icons/Star'
 import StarBorder from '@material-ui/icons/StarBorder'
-// import EnhancedTableToolbar from './EnhancedTableToolbar';
 import { Subscribe } from 'unstated'
 import { TableContainer, tableContainer } from '../../state'
 import localForage from 'localforage'
@@ -64,15 +63,6 @@ const styles = theme => ({
 })
 
 class EnhancedTable extends React.Component {
-	// state = {
-	// 	order: 'desc',
-	// 	orderBy: 'quoteVolume',
-	// 	selected: [],
-	// 	data: [],
-	// 	page: 0,
-	// 	rowsPerPage: 0,
-	// }
-
 	handleRequestSort = (event, property) => {
 		const orderBy = property
 		let order = 'desc'
@@ -87,33 +77,7 @@ class EnhancedTable extends React.Component {
 		tableContainer.setState({ order, orderBy })
 	}
 
-	// handleSelectAllClick = event => {
-	// 	if (event.target.checked) {
-	// 		tableContainer.setState(state => ({ selected: state.data.map(n => n.id) }))
-	// 		return
-	// 	}
-	// 	tableContainer.setState({ selected: [] })
-	// }
-
 	handleClick = (event, n) => {
-		// const { selected } = tableContainer.state
-		// const selectedIndex = selected.indexOf(id)
-		// let newSelected = []
-
-		// if (selectedIndex === -1) {
-		// 	newSelected = newSelected.concat(selected, id)
-		// } else if (selectedIndex === 0) {
-		// 	newSelected = newSelected.concat(selected.slice(1))
-		// } else if (selectedIndex === selected.length - 1) {
-		// 	newSelected = newSelected.concat(selected.slice(0, -1))
-		// } else if (selectedIndex > 0) {
-		// 	newSelected = newSelected.concat(
-		// 		selected.slice(0, selectedIndex),
-		// 		selected.slice(selectedIndex + 1)
-		// 	)
-		// }
-
-		// tableContainer.setState({ selected: newSelected })
 		n.favorite = !n.favorite
 		const favorite = tableContainer.state.favorite.binance
 		const favorites = tableContainer.state.data.binance.favorites
@@ -154,8 +118,6 @@ class EnhancedTable extends React.Component {
 		})
 	}
 
-	// isSelected = id => tableContainer.state.selected.indexOf(id) !== -1
-
 	render() {
 		return (
 			<Subscribe to={[TableContainer]}>
@@ -165,7 +127,6 @@ class EnhancedTable extends React.Component {
 						data: { binance },
 						order,
 						orderBy,
-						// selected,
 						rowsPerPage,
 						page: { binance: pageBinance },
 						filteredData: { binance: filteredBinance },
@@ -176,27 +137,15 @@ class EnhancedTable extends React.Component {
 					const rowsPerPageBinance =
 						(rowsPerPage.binance[markets] === 'Max' && list.length) ||
 						rowsPerPage.binance[markets]
-					{
-						/* const emptyRows =
-						rowsPerPageBinance[markets] -
-						Math.min(
-							rowsPerPageBinance[markets],
-							list.length -
-								page.list * rowsPerPageBinance[markets]
-						) */
-					}
+
 					return (
 						<Paper className={classes.root}>
-							{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
 							<div className={classes.tableWrapper}>
 								<Table className={classes.table} aria-labelledby='tableTitle'>
 									<EnhancedTableHead
-										// numSelected={selected.length}
 										order={order}
 										orderBy={orderBy}
-										// onSelectAllClick={this.handleSelectAllClick}
 										onRequestSort={this.handleRequestSort}
-										// rowCount={data.length}
 									/>
 									<TableBody>
 										{stableSort(list, getSorting(order, orderBy))
@@ -206,19 +155,12 @@ class EnhancedTable extends React.Component {
 													rowsPerPageBinance
 											)
 											.map(n => {
-												{
-													/* const isSelected = this.isSelected(n.id) */
-												}
 												return (
 													<TableRow
 														hover
-														// onClick={event => this.handleClick(event, n.id)}
 														role='checkbox'
-														// aria-checked={isSelected}
 														tabIndex={-1}
-														key={n.id}
-														// selected={isSelected}
-													>
+														key={n.id}>
 														<TableCell padding='checkbox'>
 															<Checkbox
 																onClick={event => {
@@ -254,11 +196,6 @@ class EnhancedTable extends React.Component {
 													</TableRow>
 												)
 											})}
-										{/*emptyRows > 0 && (
-											<TableRow style={{ height: 49 * emptyRows }}>
-												<TableCell colSpan={6} />
-											</TableRow>
-										)*/}
 									</TableBody>
 								</Table>
 							</div>

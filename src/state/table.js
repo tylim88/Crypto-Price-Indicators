@@ -7,7 +7,6 @@ class TableContainer extends Container {
 	state = {
 		order: 'desc',
 		orderBy: 'quoteVolume',
-		// selected:[],
 		favorite: {
 			binance: [],
 		},
