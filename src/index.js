@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './views/App'
+import Index from './views/Index'
 import { BrowserRouter } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'unstated'
@@ -18,7 +18,7 @@ ReactDOM.render(
 	<Provider inject={[tableContainer]}>
 		<BrowserRouter>
 			<MuiThemeProvider theme={theme}>
-				<App />
+				<Index />
 			</MuiThemeProvider>
 		</BrowserRouter>
 	</Provider>,
