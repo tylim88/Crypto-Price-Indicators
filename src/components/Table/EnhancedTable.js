@@ -119,10 +119,10 @@ class EnhancedTable extends React.Component {
 		const favorites = tableContainer.state.data.binance.favorites
 		const markets = this.props.markets
 		if (event.target.checked) {
-			favorite[markets].push(n.id)
+			favorite.push(n.id)
 			favorites.push(n)
 		} else {
-			favorite[markets].forEach((element, i, arr) => {
+			favorite.forEach((element, i, arr) => {
 				if (element === n.id) {
 					arr.splice(i, 1)
 				}

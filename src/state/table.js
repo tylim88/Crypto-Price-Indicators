@@ -9,12 +9,7 @@ class TableContainer extends Container {
 		orderBy: 'quoteVolume',
 		// selected:[],
 		favorite: {
-			binance: {
-				bnb_markets: [],
-				btc_markets: [],
-				alts_markets: [],
-				usd_markets: [],
-			},
+			binance: [],
 		},
 		data: {
 			binance: {
@@ -57,7 +52,14 @@ class TableContainer extends Container {
 
 	readIndexDb = () => {
 		localForage.getItem('favorite').then(res => {
-			res && (this.state.favorite = JSON.parse(res))
+			if (res) {
+				const parsed = JSON.parse(res)
+				if (!parsed.binance.length) {
+					localForage.removeItem('favorite')
+				} else {
+					this.state.favorite = parsed
+				}
+			}
 		})
 	}
 
@@ -79,10 +81,7 @@ class TableContainer extends Container {
 						pair.id = pair.symbol
 						pair.name = nameM(pair.symbol.split('/')[0])
 
-						if (
-							this.state.favorite.binance[markets].indexOf(pair['symbol']) !==
-							-1
-						) {
+						if (this.state.favorite.binance.indexOf(pair['symbol']) !== -1) {
 							pair.favorite = true
 							this.state.data.binance.favorites.push(pair)
 						} else {
