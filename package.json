@@ -1,5 +1,5 @@
 {
-	"name": "crypto-price-predictor",
+	"name": "crypto-price-indicators",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -11,7 +11,7 @@
 		"react-dom": "^16.8.6",
 		"react-router-dom": "^5.0.0",
 		"react-scripts": "2.1.8",
-		"recharts": "^1.5.0",
+		"react-stockcharts": "^0.7.8",
 		"socket.io": "^2.2.0",
 		"unstated": "^2.1.1"
 	},
