@@ -56,10 +56,7 @@ class Index extends React.Component {
 							</div>
 							<InputBase
 								onChange={event => {
-									const value = event.target.value.toUpperCase()
-									setTimeout(() => {
-										tableContainer.updateSearch(value)
-									})
+									tableContainer.updateSearch(event.target.value.toUpperCase())
 								}}
 								placeholder='Search…'
 								classes={{
