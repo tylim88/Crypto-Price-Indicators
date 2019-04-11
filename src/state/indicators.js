@@ -1,7 +1,10 @@
 import { Container } from 'unstated'
 
 class IndicatorsContainer extends Container {
-	state = {}
+	state = {
+		setting: {},
+		data: {},
+	}
 }
 
 export default IndicatorsContainer
