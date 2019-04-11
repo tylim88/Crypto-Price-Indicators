@@ -53,10 +53,10 @@ class TableContainer extends Container {
 		localForage.getItem('favorite').then(res => {
 			if (res) {
 				const parsed = JSON.parse(res)
-				if (!parsed.binance.length) {
-					localForage.removeItem('favorite')
-				} else {
+				if (Array.isArray(parsed.binance)) {
 					this.state.favorite = parsed
+				} else {
+					localForage.removeItem('favorite')
 				}
 			}
 		})
@@ -80,7 +80,7 @@ class TableContainer extends Container {
 						pair.id = pair.symbol
 						pair.name = nameM(pair.symbol.split('/')[0])
 
-						if (this.state.favorite.binance.indexOf(pair['symbol']) !== -1) {
+						if (this.state.favorite.binance.includes(pair['symbol'])) {
 							pair.favorite = true
 							this.state.data.binance.favorites.push(pair)
 						} else {
