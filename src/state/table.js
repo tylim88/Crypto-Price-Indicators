@@ -63,7 +63,7 @@ class TableContainer extends Container {
 	}
 
 	startDataStream = () => {
-		this.state.socket = io.connect(process.env.REACT_APP_SERVER_URL)
+		this.state.socket = io(process.env.REACT_APP_SERVER_URL) // endpoint a.k.a  namespace
 		this.state.socket.on('data', data => {
 			this.state.data.binance.favorites = []
 			for (let markets in data.binance) {
@@ -72,7 +72,7 @@ class TableContainer extends Container {
 					// very weird thing happen here, pair already converted to numeric
 					this.state.data.binance[markets] = pairs.map(pair => {
 						for (let prop in pair[1]) {
-							if (prop !== 'symbol') {
+							if (!isNaN(pair[1][prop])) {
 								pair[1][prop] = parseFloat(pair[1][prop])
 							}
 						}
