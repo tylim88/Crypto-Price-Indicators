@@ -77,7 +77,6 @@ class TableContainer extends Container {
 							}
 						}
 						pair = pair[1]
-						pair.id = pair.symbol
 						pair.name = nameM(pair.symbol.split('/')[0])
 
 						if (this.state.favorite.binance.includes(pair['symbol'])) {

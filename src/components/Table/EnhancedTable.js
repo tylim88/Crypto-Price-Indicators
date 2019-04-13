@@ -82,17 +82,17 @@ class EnhancedTable extends React.Component {
 		const favorite = tableContainer.state.favorite.binance
 		const favorites = tableContainer.state.data.binance.favorites
 		if (event.target.checked) {
-			favorite.push(n.id)
+			favorite.push(n.symbol)
 			favorites.push(n)
 		} else {
 			favorite.forEach((element, i, arr) => {
-				if (element === n.id) {
+				if (element === n.symbol) {
 					arr.splice(i, 1)
 				}
 			})
 
 			favorites.forEach((element, i, arr) => {
-				if (element.symbol === n.id) {
+				if (element.symbol === n.symbol) {
 					arr.splice(i, 1)
 				}
 			})
@@ -160,7 +160,7 @@ class EnhancedTable extends React.Component {
 														hover
 														role='checkbox'
 														tabIndex={-1}
-														key={n.id}>
+														key={n.symbol}>
 														<TableCell padding='checkbox'>
 															<Checkbox
 																onClick={event => {
