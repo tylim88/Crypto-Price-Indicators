@@ -1,4 +1,4 @@
 import IndexPage from './IndexPage'
-import IndicatorsPage from './IndicatorsPage'
+import ChartPage from './ChartPage'
 
-export { IndicatorsPage, IndexPage }
+export { ChartPage, IndexPage }

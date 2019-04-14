@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { IndexPage, IndicatorsPage } from './views'
+import { IndexPage, ChartPage } from './views'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'unstated'
@@ -20,7 +20,7 @@ ReactDOM.render(
 			<MuiThemeProvider theme={theme}>
 				<Switch>
 					<Route exact path='/' render={() => <IndexPage />} />
-					<Route path='/Active' render={() => <IndicatorsPage />} />
+					<Route path='/Chart' render={() => <ChartPage />} />
 				</Switch>
 			</MuiThemeProvider>
 		</BrowserRouter>
