@@ -11,6 +11,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import { tableContainer } from '../state'
 import styles from '../assets/css/Tabs'
 import TabContainer from '../components/TabContainer/TabContainer'
+import socket from '../api/websocket'
 
 const markets = [
 	'favorites',
@@ -24,7 +25,7 @@ class IndexPage extends React.Component {
 	constructor(props) {
 		super(props)
 		tableContainer.readIndexDb()
-		tableContainer.startDataStream()
+		tableContainer.startDataStream(socket)
 	}
 	state = {
 		value: 2,
@@ -35,7 +36,7 @@ class IndexPage extends React.Component {
 	}
 
 	render() {
-		const { classes } = this.props
+		const { classes, history } = this.props
 		const { value } = this.state
 
 		return (
@@ -68,7 +69,7 @@ class IndexPage extends React.Component {
 					</Toolbar>
 				</AppBar>
 				<TabContainer>
-					<EnhancedTable markets={markets[value]} />
+					<EnhancedTable markets={markets[value]} history={history} />
 				</TabContainer>
 			</div>
 		)

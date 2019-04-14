@@ -16,11 +16,11 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
 	<Provider inject={[tableContainer]}>
-		<BrowserRouter>
+		<BrowserRouter basename={process.env.REACT_APP_URL}>
 			<MuiThemeProvider theme={theme}>
 				<Switch>
-					<Route exact path='/' render={() => <IndexPage />} />
-					<Route path='/Chart' render={() => <ChartPage />} />
+					<Route exact path='/' component={IndexPage} />
+					<Route path='/Chart' component={ChartPage} />
 				</Switch>
 			</MuiThemeProvider>
 		</BrowserRouter>

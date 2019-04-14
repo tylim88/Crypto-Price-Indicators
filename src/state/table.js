@@ -1,5 +1,4 @@
 import { Container } from 'unstated'
-import io from 'socket.io-client'
 import localForage from 'localforage'
 const { nameM } = require('crypto-symbol')
 
@@ -47,6 +46,7 @@ class TableContainer extends Container {
 			},
 		},
 	}
+	socket = {}
 
 	readIndexDb = () => {
 		localForage.getItem('favorite').then(res => {
@@ -61,26 +61,7 @@ class TableContainer extends Container {
 		})
 	}
 
-	startDataStream = () => {
-		const socket = io(process.env.REACT_APP_SERVER_URL) // endpoint a.k.a  namespace
-		socket.on('connect', () => {
-			socket.emit('room', {
-				join: true,
-				pair: 'ETH/BTC'.replace('/', ''),
-				period: '1m',
-			})
-		})
-		const roomName = `${'ETH/BTC'.replace('/', '')}@${'1m'}`
-		socket.on(roomName, chart => {
-			console.log(chart)
-		})
-		setTimeout(() => {
-			socket.emit('room', {
-				join: false,
-				pair: 'ETH/BTC'.replace('/', ''),
-				period: '1m',
-			})
-		}, 10000)
+	startDataStream = socket => {
 		socket.on('data', data => {
 			this.state.data.binance.favorites = []
 			for (let markets in data.binance) {

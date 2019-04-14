@@ -122,7 +122,7 @@ class EnhancedTable extends React.Component {
 		return (
 			<Subscribe to={[TableContainer]}>
 				{table => {
-					const { classes, markets } = this.props
+					const { classes, markets, history } = this.props
 					const {
 						data: { binance },
 						order,
@@ -160,10 +160,16 @@ class EnhancedTable extends React.Component {
 														hover
 														role='checkbox'
 														tabIndex={-1}
+														onClick={() => {
+															const link = `/Chart/${n.symbol.replace('/', '')}`
+															history.push(link)
+														}}
 														key={n.symbol}>
 														<TableCell padding='checkbox'>
 															<Checkbox
 																onClick={event => {
+																	// prevent event bubbling in nested component
+																	event.stopPropagation()
 																	this.handleClick(event, n)
 																}}
 																checked={n.favorite}
