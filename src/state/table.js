@@ -46,7 +46,6 @@ class TableContainer extends Container {
 				favorites: 'Max',
 			},
 		},
-		socket: {},
 	}
 
 	readIndexDb = () => {
@@ -63,8 +62,26 @@ class TableContainer extends Container {
 	}
 
 	startDataStream = () => {
-		this.state.socket = io(process.env.REACT_APP_SERVER_URL) // endpoint a.k.a  namespace
-		this.state.socket.on('data', data => {
+		const socket = io(process.env.REACT_APP_SERVER_URL) // endpoint a.k.a  namespace
+		socket.on('connect', () => {
+			socket.emit('room', {
+				join: true,
+				pair: 'ETH/BTC'.replace('/', ''),
+				period: '1m',
+			})
+		})
+		const roomName = `${'ETH/BTC'.replace('/', '')}@${'1m'}`
+		socket.on(roomName, chart => {
+			console.log(chart)
+		})
+		setTimeout(() => {
+			socket.emit('room', {
+				join: false,
+				pair: 'ETH/BTC'.replace('/', ''),
+				period: '1m',
+			})
+		}, 10000)
+		socket.on('data', data => {
 			this.state.data.binance.favorites = []
 			for (let markets in data.binance) {
 				if (markets !== 'favorites') {
