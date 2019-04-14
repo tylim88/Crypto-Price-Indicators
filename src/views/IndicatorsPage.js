@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab'
 import styles from '../assets/css/Tabs'
 import TabContainer from '../components/TabContainer/TabContainer'
 
-class Indicators extends React.Component {
+class IndicatorsPage extends React.Component {
 	state = {
 		value: 0,
 	}
@@ -26,7 +26,7 @@ class Indicators extends React.Component {
 				<AppBar position='static'>
 					<Toolbar>
 						<Tabs value={value} onChange={this.handleChange}>
-							<Tab label='Indicators' />
+							<Tab label='IndicatorsPage' />
 							<Tab label='Setting' />
 						</Tabs>
 						<div className={classes.grow} />
@@ -38,8 +38,8 @@ class Indicators extends React.Component {
 	}
 }
 
-Indicators.propTypes = {
+IndicatorsPage.propTypes = {
 	classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Indicators)
+export default withStyles(styles)(IndicatorsPage)

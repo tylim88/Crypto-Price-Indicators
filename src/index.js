@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Index from './views/Index'
-import { BrowserRouter } from 'react-router-dom'
+import { IndexPage, IndicatorsPage } from './views'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'unstated'
 import { tableContainer } from './state'
@@ -18,7 +18,10 @@ ReactDOM.render(
 	<Provider inject={[tableContainer]}>
 		<BrowserRouter>
 			<MuiThemeProvider theme={theme}>
-				<Index />
+				<Switch>
+					<Route exact path='/' render={() => <IndexPage />} />
+					<Route path='/Active' render={() => <IndicatorsPage />} />
+				</Switch>
 			</MuiThemeProvider>
 		</BrowserRouter>
 	</Provider>,
